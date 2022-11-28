@@ -98,7 +98,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#testTable").append(`
           <tr>
-            <td class="forSingleView"><button>${printOut[i].name}</button></td>
+            <td><button class="forSingleView" value="${i}">${printOut[i].name}</button></td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
           </tr>}}`);
@@ -189,8 +189,16 @@ async function starWarsApi() {
             `);
       }
     }
+    console.log("after IFS")
+    $('button').click(function(){
+      var clicked_button= $(this).val();
+      console.log(clicked_button)
+      $('#singleView').append(`
+      <p> ${JSON.stringify(printOut[clicked_button])} </p>`)
+    })
   });
-
+  
   // https://swapi.dev/api/?/&=${finalcategory}
 }
 starWarsApi();
+
