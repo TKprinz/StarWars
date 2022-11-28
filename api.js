@@ -18,6 +18,8 @@ async function starWarsApi() {
       `<option value="${category}">${category}:</Option>`
     );
   }
+
+  // Searchbutton event
   $("#testButton").on("click", async () => {
     let answer = `${$("#testCategory").val()}`;
     let finalCategory = categoryAnswer[answer];
@@ -31,5 +33,9 @@ async function starWarsApi() {
     console.log(finalCategoryAnswer);
   });
 
+  // Singleviewbutton event
+  $(".forSingleView").on("click", async () => {
+    console.log("test");
+  });
 }
 starWarsApi();
