@@ -40,7 +40,11 @@ async function starWarsApi() {
       `<option value="${category}">${category}:</Option>`
     );
   }
+  return categoryAnswer
+}
+
   $("#searchButton").on("click", async () => {
+    let categoryAnswer = await starWarsApi()
     let tableData = document.querySelector("#resultsTable");
     tableData.textContent = "";
 
@@ -63,7 +67,6 @@ async function starWarsApi() {
       //Adding data from first page to an empty array
       finalArray.push(obj);
     });
-
     console.log(finalArray[0]);
     // Function for multiple pages
     // If counts > 10 means that we need to iterate multiple pages
@@ -87,6 +90,7 @@ async function starWarsApi() {
     let printOut = finalArray;
 
     console.log(answer);
+    
     if (answer == "people") {
       $("#resultsTable").append(`
         <tr >
@@ -202,6 +206,6 @@ async function starWarsApi() {
       <p> ${JSON.stringify(printOut[clicked_button])} </p>`)
     })
   });
-}
+
 starWarsApi();
 
