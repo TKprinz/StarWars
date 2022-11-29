@@ -1,5 +1,5 @@
 // $(document).ready((event) => {
-//   $("#testButton").on("click", () => {
+//   $("#searchButton").on("click", () => {
 //     renderCharacter($("#testInput").val());
 //   });
 // });
@@ -28,7 +28,6 @@ async function starWarsApi() {
   const categoryAnswer = await response.json();
 
   console.log(categoryAnswer);
-
   // let categoryAnswer = {
   //   People: "People",
   //   Planets: "Planets",
@@ -37,18 +36,18 @@ async function starWarsApi() {
 
   // append Categories from API Root answer
   for (const category in categoryAnswer) {
-    $("#testCategory").append(
+    $("#selectValue").append(
       `<option value="${category}">${category}:</Option>`
     );
   }
-  $("#testButton").on("click", async () => {
-    let tableData = document.querySelector("#testTable");
+  $("#searchButton").on("click", async () => {
+    let tableData = document.querySelector("#resultsTable");
     tableData.textContent = "";
 
     const finalArray = []; // Contains all data from all pages in the search
     let currentPage = 1; // Keeping track of current page for data fetching
 
-    let answer = `${$("#testCategory").val()}`;
+    let answer = `${$("#selectValue").val()}`;
     let finalCategory = categoryAnswer[answer];
     let searchValue = $("#search").val();
 
@@ -89,102 +88,108 @@ async function starWarsApi() {
 
     console.log(answer);
     if (answer == "people") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
         <tr >
           <th>Name</th>
           <th>Birth Year</th>
           <th>Gender</th>
         </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
           <tr>
-            <td><button class="forSingleView" value="${i}">${printOut[i].name}</button></td>
+            <td>${printOut[i].name}</td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
+            <td><button class="forSingleView" value="${i}">More</button</td>
           </tr>}}`);
       }
     }
     if (answer == "planets") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
       <tr>
         <th>Name</th>
         <th>Population</th>
         <th>Terrain</th>
       </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
       <tr>
         <td><button class="forSingleView">${printOut[i].name}</button></td>
         <td>${printOut[i].population}</td>
         <td>${printOut[i].terrain}</td>
+        <td><button class="forSingleView" value="${i}">More</button</td>
       </tr>}}
       `);
       }
     }
     if (answer == "films") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
     <tr>
       <th>Title</th>
       <th>Director</th>
       <th>Release Date</th>
     </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
     <tr>
       <td><button class="forSingleView">${printOut[i].title}</button></td>
       <td>${printOut[i].director}</td>
       <td>${printOut[i].release_date}</td>
+      <td><button class="forSingleView" value="${i}">More</button</td>
     </tr>}}
     `);
       }
     }
     if (answer == "species") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
           <tr>
             <th>Name</th>
             <th>Classification</th>
             <th>Language</th>
           </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
           <tr>
             <td><button class="forSingleView">${printOut[i].name}</button></td>
             <td>${printOut[i].classification}</td>
             <td>${printOut[i].language}</td>
+            <td><button class="forSingleView" value="${i}">More</button</td>
           </tr>}}
           `);
       }
     }
     if (answer == "vehicles") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
             <tr>
               <th>Name</th>
               <th>Model</th>
               <th>Vehicle Class</th>
             </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
             <tr>
               <td><button class="forSingleView">${printOut[i].name}</button></td>
               <td>${printOut[i].model}</td>
               <td>${printOut[i].vehicle_class}</td>
+              <td><button class="forSingleView" value="${i}">More</button</td>
             </tr>}}
             `);
       }
     }
     if (answer == "starships") {
-      $("#testTable").append(`
+      $("#resultsTable").append(`
             <tr>
               <th>Name</th>
               <th>Crew</th>
               <th>Starship Class</th>
             </tr>`);
       for (let i = 0; i < printOut.length; i++) {
-        $("#testTable").append(`
+        $("#resultsTable").append(`
             <tr>
               <td><button class="forSingleView">${printOut[i].name}</button></td>
               <td>${printOut[i].crew}</td>
               <td>${printOut[i].starship_class}</td>
+              <td><button class="forSingleView" value="${i}">More</button</td>
             </tr>}}
             `);
       }
@@ -197,8 +202,6 @@ async function starWarsApi() {
       <p> ${JSON.stringify(printOut[clicked_button])} </p>`)
     })
   });
-  
-  // https://swapi.dev/api/?/&=${finalcategory}
 }
 starWarsApi();
 
