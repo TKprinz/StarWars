@@ -118,7 +118,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
       <tr>
-        <td><button class="forSingleView">${printOut[i].name}</button></td>
+        <td>${printOut[i].name}</td>
         <td>${printOut[i].population}</td>
         <td>${printOut[i].terrain}</td>
         <td><button class="forSingleView" value="${i}">More</button</td>
@@ -136,7 +136,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
     <tr>
-      <td><button class="forSingleView">${printOut[i].title}</button></td>
+      <td>${printOut[i].title}</td>
       <td>${printOut[i].director}</td>
       <td>${printOut[i].release_date}</td>
       <td><button class="forSingleView" value="${i}">More</button</td>
@@ -154,7 +154,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
           <tr>
-            <td><button class="forSingleView">${printOut[i].name}</button></td>
+            <td>${printOut[i].name}</td>
             <td>${printOut[i].classification}</td>
             <td>${printOut[i].language}</td>
             <td><button class="forSingleView" value="${i}">More</button</td>
@@ -172,7 +172,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
             <tr>
-              <td><button class="forSingleView">${printOut[i].name}</button></td>
+              <td>${printOut[i].name}</td>
               <td>${printOut[i].model}</td>
               <td>${printOut[i].vehicle_class}</td>
               <td><button class="forSingleView" value="${i}">More</button</td>
@@ -190,7 +190,7 @@ async function starWarsApi() {
       for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
             <tr>
-              <td><button class="forSingleView">${printOut[i].name}</button></td>
+              <td>${printOut[i].name}</td>
               <td>${printOut[i].crew}</td>
               <td>${printOut[i].starship_class}</td>
               <td><button class="forSingleView" value="${i}">More</button</td>
@@ -198,7 +198,6 @@ async function starWarsApi() {
             `);
       }
     }
-    console.log("after IFS")
     $('button').click(function(){
       var clicked_button= $(this).val();
       console.log(clicked_button)
