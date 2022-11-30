@@ -15,25 +15,49 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
     />
+    <link rel="stylesheet" href="style.css" />
     <script
       src="https://code.jquery.com/jquery-3.6.1.min.js"
       integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
       crossorigin="anonymous"
     ></script>
-    <title>Document</title>
+    <script defer src="script.js"></script>
+    <title>Starwars Search</title>
   </head>
-  <body>
-    <p>hello</p>
-    <select name="kategori" id="selectValue"></select>
-    <button id="searchButton">Search Button</button>
-    <input type="text" id="search" placeholder="Sök.." />
+  <body class="d-flex flex-column align-items-center">
+    <p>Starwars Search</p>
+    <div class="customTable row row-cols-md-auto g-3 align-items-center mt-4">
+      <div class="form-group has-search">
+        <span class="form-control-feedback"><i class="bi bi-search"></i></span>
+        <input
+          type="text"
+          class="form-control"
+          id="search"
+          placeholder="Search..."
+          autocomplete="false"
+        />
+      </div>
+      <div class="col-12">
+        <select name="kategori" class="form-select" id="selectValue"></select>
+      </div>
+      <div class="col-12 d-flex">
+        <button
+          type="button"
+          class="btn btn-warning btn-block mx-auto"
+          id="searchButton"
+        >
+          Search
+        </button>
+      </div>
+    </div>
 
-    <div id="results">
-      <table id="resultsTable"></table>
+    <div class="mt-4" id="results">
+      <table class="mt-2" id="resultsTable"></table>
       <a href=""></a>
-      <button></button>
     </div>
     <div id="singleView"></div>
+    <div class="spinner spinner-hidden">
+      <div class="spinner-border text-warning" role="status"></div>
+    </div>
   </body>
-  <script src="script.js"></script>
 </html>

@@ -34,90 +34,101 @@ async function starWarsApi() {
   //   Starships: "Starships",
   // };
 
+  // Clear options
+  $(".form-select").empty();
+
   // append Categories from API Root answer
   for (const category in categoryAnswer) {
     $("#selectValue").append(
       `<option value="${category}">${category}:</Option>`
     );
   }
-  return categoryAnswer
+  return categoryAnswer;
 }
 
-  $("#searchButton").on("click", async () => {
-    let categoryAnswer = await starWarsApi()
-    let tableData = document.querySelector("#resultsTable");
-    tableData.textContent = "";
+$("#searchButton").on("click", async () => {
+  // Clear singleview from data and remove hidden class for listview
+  $("#singleView").text("");
+  document.getElementById("resultsTable").classList.remove("listview-hidden");
 
-    const finalArray = []; // Contains all data from all pages in the search
-    let currentPage = 1; // Keeping track of current page for data fetching
+  $(".spinner").removeClass("spinner-hidden"); // Loading starting, showing spinner
 
-    let answer = `${$("#selectValue").val()}`;
-    let finalCategory = categoryAnswer[answer];
-    let searchValue = $("#search").val();
+  let categoryAnswer = await starWarsApi();
+  let tableData = document.querySelector("#resultsTable");
+  tableData.textContent = "";
 
-    let finalCategoryAnswer = await fetch(
-      `${finalCategory}?search=${searchValue}`
-    );
+  const finalArray = []; // Contains all data from all pages in the search
+  let currentPage = 1; // Keeping track of current page for data fetching
 
-    let finalAnswer = await finalCategoryAnswer.json();
-    console.log(finalAnswer);
-    //console.log(finalCategoryAnswer);
+  let answer = `${$("#selectValue").val()}`;
+  let finalCategory = categoryAnswer[answer];
+  let searchValue = $("#search").val();
 
-    finalAnswer.results.forEach((obj) => {
-      //Adding data from first page to an empty array
-      finalArray.push(obj);
-    });
-    console.log(finalArray[0]);
-    // Function for multiple pages
-    // If counts > 10 means that we need to iterate multiple pages
-    if (finalAnswer.count > 10) {
-      // If null, next page doesnt exist
-      while (finalAnswer.next !== null) {
-        currentPage++; // Next page
-        // console.log(`Current page: ${currentPage}`);
-        let finalCategoryAnswer = await fetch(
-          `${finalCategory}?search=${searchValue}&page=${currentPage}`
-        );
-        finalAnswer = await finalCategoryAnswer.json();
-        console.log(finalAnswer.results);
-        finalAnswer.results.forEach((obj) => {
-          finalArray.push(obj); // Push data on current page to "finalArray"
-        });
-      }
+  let finalCategoryAnswer = await fetch(
+    `${finalCategory}?search=${searchValue}`
+  );
+
+  let finalAnswer = await finalCategoryAnswer.json();
+  console.log(finalAnswer);
+  //console.log(finalCategoryAnswer);
+
+  finalAnswer.results.forEach((obj) => {
+    //Adding data from first page to an empty array
+    finalArray.push(obj);
+  });
+  console.log(finalArray[0]);
+  // Function for multiple pages
+  // If counts > 10 means that we need to iterate multiple pages
+  if (finalAnswer.count > 10) {
+    // If null, next page doesnt exist
+    while (finalAnswer.next !== null) {
+      currentPage++; // Next page
+      // console.log(`Current page: ${currentPage}`);
+      let finalCategoryAnswer = await fetch(
+        `${finalCategory}?search=${searchValue}&page=${currentPage}`
+      );
+      finalAnswer = await finalCategoryAnswer.json();
+      console.log(finalAnswer.results);
+      finalAnswer.results.forEach((obj) => {
+        finalArray.push(obj); // Push data on current page to "finalArray"
+      });
     }
+  }
 
-    console.log(finalArray);
-    let printOut = finalArray;
+  console.log(finalArray);
+  let printOut = finalArray;
+  // Loading finished, hiding spinner
+  $(".spinner").addClass("spinner-hidden");
 
-    //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.
-    console.log(answer);
-    
-    if (answer == "people") {
-      $("#resultsTable").append(`
+  //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.
+  console.log(answer);
+
+  if (answer == "people") {
+    $("#resultsTable").append(`
         <tr >
           <th>Name</th>
           <th>Birth Year</th>
           <th>Gender</th>
         </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
           <tr>
             <td>${printOut[i].name}</td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
             <td><button class="forSingleView" value="${i}">More</button</td>
           </tr>}}`);
-      }
     }
-    if (answer == "planets") {
-      $("#resultsTable").append(`
+  }
+  if (answer == "planets") {
+    $("#resultsTable").append(`
       <tr>
         <th>Name</th>
         <th>Population</th>
         <th>Terrain</th>
       </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
       <tr>
         <td>${printOut[i].name}</td>
         <td>${printOut[i].population}</td>
@@ -125,17 +136,17 @@ async function starWarsApi() {
         <td><button class="forSingleView" value="${i}">More</button</td>
       </tr>}}
       `);
-      }
     }
-    if (answer == "films") {
-      $("#resultsTable").append(`
+  }
+  if (answer == "films") {
+    $("#resultsTable").append(`
     <tr>
       <th>Title</th>
       <th>Director</th>
       <th>Release Date</th>
     </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
     <tr>
       <td>${printOut[i].title}</td>
       <td>${printOut[i].director}</td>
@@ -143,17 +154,17 @@ async function starWarsApi() {
       <td><button class="forSingleView" value="${i}">More</button</td>
     </tr>}}
     `);
-      }
     }
-    if (answer == "species") {
-      $("#resultsTable").append(`
+  }
+  if (answer == "species") {
+    $("#resultsTable").append(`
           <tr>
             <th>Name</th>
             <th>Classification</th>
             <th>Language</th>
           </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
           <tr>
             <td>${printOut[i].name}</td>
             <td>${printOut[i].classification}</td>
@@ -161,17 +172,17 @@ async function starWarsApi() {
             <td><button class="forSingleView" value="${i}">More</button</td>
           </tr>}}
           `);
-      }
     }
-    if (answer == "vehicles") {
-      $("#resultsTable").append(`
+  }
+  if (answer == "vehicles") {
+    $("#resultsTable").append(`
             <tr>
               <th>Name</th>
               <th>Model</th>
               <th>Vehicle Class</th>
             </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
             <tr>
               <td>${printOut[i].name}</td>
               <td>${printOut[i].model}</td>
@@ -179,17 +190,17 @@ async function starWarsApi() {
               <td><button class="forSingleView" value="${i}">More</button</td>
             </tr>}}
             `);
-      }
     }
-    if (answer == "starships") {
-      $("#resultsTable").append(`
+  }
+  if (answer == "starships") {
+    $("#resultsTable").append(`
             <tr>
               <th>Name</th>
               <th>Crew</th>
               <th>Starship Class</th>
             </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
-        $("#resultsTable").append(`
+    for (let i = 0; i < printOut.length; i++) {
+      $("#resultsTable").append(`
             <tr>
               <td>${printOut[i].name}</td>
               <td>${printOut[i].crew}</td>
@@ -197,15 +208,41 @@ async function starWarsApi() {
               <td><button class="forSingleView" value="${i}">More</button</td>
             </tr>}}
             `);
-      }
     }
-    $('button').click(function(){
-      var clicked_button= $(this).val();
-      console.log(clicked_button)
-      $('#singleView').append(`
-      <p> ${JSON.stringify(printOut[clicked_button])} </p>`)
-    })
+  }
+
+  $(".forSingleView").click(function () {
+    if ($("#singleView").hasClass("singleview-hidden")) {
+      document
+        .getElementById("singleView")
+        .classList.remove("singleview-hidden");
+    }
+
+    // Clear old singleview data
+    $("#singleView").text("");
+
+    // Hide listview
+    document.getElementById("resultsTable").classList.add("listview-hidden");
+
+    var clicked_button = $(this).val();
+    console.log(clicked_button);
+    $("#singleView").append(`
+    <p> ${JSON.stringify(printOut[clicked_button])} </p>`);
+
+    $("#singleView").append(`
+    <button id="goBack" class="btn btn-warning btn-block mx-auto">Back</button>`);
+
+    // Go back from singleview, button eventlistener
+    $("#goBack").click(function () {
+      // Showing listview, hiding singleview
+      document
+        .getElementById("resultsTable")
+        .classList.remove("listview-hidden");
+      document.getElementById("singleView").classList.add("singleview-hidden");
+
+      console.log("clicked goback button");
+    });
   });
+});
 
 starWarsApi();
-

@@ -1,3 +1,9 @@
+*,
+body,
+main {
+  box-sizing: border-box;
+}
+
 .spinner {
   display: flex;
   justify-content: center;
@@ -13,5 +19,88 @@
 }
 
 .singleview-hidden {
+  display: none;
+}
+
+.customTable {
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.has-search .form-control-feedback {
+  position: absolute;
+  z-index: 2;
+  display: block;
+  width: 2.375rem;
+  height: 2.375rem;
+  line-height: 2.375rem;
+  text-align: center;
+  pointer-events: none;
+  color: #aaa;
+}
+
+.has-search .form-control {
+  padding-left: 2.375rem;
+}
+
+.form-control {
+  border-color: #c3ac00;
+}
+.form-select:focus,
+.form-control:focus {
+  border-color: #c3ac00;
+  box-shadow: 0 0 0 0.05rem #ffc107;
+}
+
+.bi-search {
+  color: black;
+}
+
+#search-button {
+  background-color: #ffc107;
+  margin-right: 10px;
+  margin-left: 10px;
+  width: 100%;
+}
+
+#search-button:hover {
+  background-color: #c3ac00;
+  border-color: #c3ac00;
+}
+
+#search-button::after {
+  background-color: #c3ac00;
+  border-color: #c3ac00;
+}
+
+.form-select {
+  cursor: pointer;
+  border-color: #c3ac00;
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.spinner-hidden {
+  display: none;
+}
+
+.form-group:hover {
+  border-color: #c3ac00;
+}
+
+table td,
+table th {
+  padding-top: 0.15rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  cursor: default;
+}
+
+.goBack-hidden {
   display: none;
 }
