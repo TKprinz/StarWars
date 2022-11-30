@@ -4,6 +4,18 @@ main {
   box-sizing: border-box;
 }
 
+body {
+  background-image: url(https://pngimg.com/uploads/darth_vader/darth_vader_PNG20.png);
+  background-repeat: no-repeat;
+  background-color: black;
+  color: white;
+}
+
+div#results {
+  background-color: black;
+  opacity: 0.8;
+}
+
 .spinner {
   display: flex;
   justify-content: center;

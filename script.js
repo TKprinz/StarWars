@@ -128,7 +128,7 @@ $("#searchButton").on("click", async () => {
             <td>${printOut[i].name}</td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
-            <td><button class="forSingleView" value="${i}">More</button</td>
+            <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
           </tr>}}`);
     }
   }
@@ -145,7 +145,7 @@ $("#searchButton").on("click", async () => {
         <td>${printOut[i].name}</td>
         <td>${printOut[i].population}</td>
         <td>${printOut[i].terrain}</td>
-        <td><button class="forSingleView" value="${i}">More</button</td>
+        <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
       </tr>}}
       `);
     }
@@ -163,7 +163,7 @@ $("#searchButton").on("click", async () => {
       <td>${printOut[i].title}</td>
       <td>${printOut[i].director}</td>
       <td>${printOut[i].release_date}</td>
-      <td><button class="forSingleView" value="${i}">More</button</td>
+      <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
     </tr>}}
     `);
     }
@@ -181,7 +181,7 @@ $("#searchButton").on("click", async () => {
             <td>${printOut[i].name}</td>
             <td>${printOut[i].classification}</td>
             <td>${printOut[i].language}</td>
-            <td><button class="forSingleView" value="${i}">More</button</td>
+            <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
           </tr>}}
           `);
     }
@@ -199,7 +199,7 @@ $("#searchButton").on("click", async () => {
               <td>${printOut[i].name}</td>
               <td>${printOut[i].model}</td>
               <td>${printOut[i].vehicle_class}</td>
-              <td><button class="forSingleView" value="${i}">More</button</td>
+              <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
             </tr>}}
             `);
     }
@@ -217,7 +217,7 @@ $("#searchButton").on("click", async () => {
               <td>${printOut[i].name}</td>
               <td>${printOut[i].crew}</td>
               <td>${printOut[i].starship_class}</td>
-              <td><button class="forSingleView" value="${i}">More</button</td>
+              <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
             </tr>}}
             `);
     }
@@ -272,7 +272,7 @@ $("#searchButton").on("click", async () => {
               <td>${printOut[i].population}</td>
               <td>${printOut[i].terrain}</td>
               <td>${printOut[i].gravity}</td>
-              <td>${printOut[i].obital_period}</td>
+              <td>${printOut[i].orbital_period}</td>
             </tr>}}
             `);
       }
