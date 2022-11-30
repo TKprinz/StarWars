@@ -89,6 +89,7 @@ async function starWarsApi() {
     console.log(finalArray);
     let printOut = finalArray;
 
+    //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.
     console.log(answer);
     
     if (answer == "people") {
