@@ -16,18 +16,18 @@
 // };
 
 const starWars_api_url = `https://swapi.dev/api`; // Bygger ihop url för anrop
-let categories
+let categories;
 
 fetch(starWars_api_url)
-  .then(res => res.json())
-  .then(result => {
-    categories = result
+  .then((res) => res.json())
+  .then((result) => {
+    categories = result;
     for (const category in result) {
       $("#selectValue").append(
         `<option value="${category}">${category}:</Option>`
       );
     }
-  })
+  });
 
 async function starWarsApi() {
   // Skapar funktion för att kunna hämta StarWars
@@ -47,7 +47,7 @@ async function starWarsApi() {
   // };
 
   // Clear options
-   $(".form-select");
+  $(".form-select");
 
   // append Categories from API Root answer
   for (const category in categoryAnswer) {
@@ -72,7 +72,7 @@ $("#searchButton").on("click", async () => {
   const finalArray = []; // Contains all data from all pages in the search
   let currentPage = 1; // Keeping tra4ck of current page for data fetching
 
-  let chosenCategory = `${$("#selectValue").val()}`; 
+  let chosenCategory = `${$("#selectValue").val()}`;
   let categoryUrl = categories[chosenCategory];
   let searchValue = $("#search").val();
 
@@ -223,34 +223,196 @@ $("#searchButton").on("click", async () => {
     }
   }
 
+  if (chosenCategory == "people") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Birth</th>
+        <th scope="col">Gender</th>
+        <th scope="col">Eye Color</th>
+        <th scope="col">Height</th>
+        <th scope="col">Homeworld</th>
+        <th scope="col">Starships</th>
+      </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+              <tr>
+                <td>${printOut[i].name}</td>
+                <td>${printOut[i].birth_year}</td>
+                <td>${printOut[i].gender}</td>
+                <td>${printOut[i].eye_color}</td>
+                <td>${printOut[i].height}</td>
+                <td>${printOut[i].homeworld}</td>
+                <td>${printOut[i].starships.length}</td>
+              </tr>}}
+              `);
+      }
+    });
+  }
+
+  if (chosenCategory == "planets") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Climate</th>
+      <th scope="col">Size</th>
+      <th scope="col">Population</th>
+      <th scope="col">Terrain</th>
+      <th scope="col">Gravity</th>
+      <th scope="col">Period</th>
+    </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+            <tr>
+              <td>${printOut[i].name}</td>
+              <td>${printOut[i].climate}</td>
+              <td>${printOut[i].diameter}</td>
+              <td>${printOut[i].population}</td>
+              <td>${printOut[i].terrain}</td>
+              <td>${printOut[i].gravity}</td>
+              <td>${printOut[i].obital_period}</td>
+            </tr>}}
+            `);
+      }
+    });
+  }
+  if (chosenCategory == "films") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+    <tr>
+      <th scope="col">Title</th>
+      <th scope="col">Director</th>
+      <th scope="col">Release Date</th>
+      <th scope="col">Episode</th>
+      <th scope="col">Producers</th>
+      <th scope="col">Characters</th>
+      <th scope="col">Period</th>
+    </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+            <tr>
+              <td>${printOut[i].title}</td>
+              <td>${printOut[i].director}</td>
+              <td>${printOut[i].release_date}</td>
+              <td>${printOut[i].episode_id}</td>
+              <td>${printOut[i].producer}</td>
+              <td>${printOut[i].characters.length}</td>
+              <td>${printOut[i].obital_period}</td>
+            </tr>}}
+            `);
+      }
+    });
+  }
+  if (chosenCategory == "species") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Classification</th>
+      <th scope="col">Language</th>
+      <th scope="col">Avg Height</th>
+      <th scope="col">Avg Lifespan</th>
+      <th scope="col">Designation</th>
+      <th scope="col">Eye Colors</th>
+      <th scope="col">Skin Colors</th>
+    </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+            <tr>
+              <td>${printOut[i].name}</td>
+              <td>${printOut[i].classification}</td>
+              <td>${printOut[i].language}</td>
+              <td>${printOut[i].average_height}</td>
+              <td>${printOut[i].average_lifespan}</td>
+              <td>${printOut[i].designation}</td>
+              <td>${printOut[i].eye_colors}</td>
+              <td>${printOut[i].skin_colors}</td>
+            </tr>}}
+            `);
+      }
+    });
+  }
+  if (chosenCategory == "vehicles") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Model</th>
+      <th scope="col">Vehicle Class</th>
+      <th scope="col">Length</th>
+      <th scope="col">Manufacturer</th>
+      <th scope="col">Passengers</th>
+      <th scope="col">Cargo Capacity</th>
+    </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+            <tr>
+              <td>${printOut[i].name}</td>
+              <td>${printOut[i].model}</td>
+              <td>${printOut[i].vehicle_class}</td>
+              <td>${printOut[i].length}</td>
+              <td>${printOut[i].manufacturer}</td>
+              <td>${printOut[i].passengers}</td>
+              <td>${printOut[i].cargo_capacity}</td>
+            </tr>}}
+            `);
+      }
+    });
+  }
+  if (chosenCategory == "starships") {
+    $(".forSingleView").click(function () {
+      $("#choosenItem").append(`
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Crew</th>
+      <th scope="col">Starship Class</th>
+      <th scope="col">Manufacturer</th>
+      <th scope="col">Model</th>
+      <th scope="col">Passengers</th>
+      <th scope="col">Length</th>
+    </tr>`);
+      for (let i = 0; i < printOut.length; i++) {
+        $("#choosenItem").append(`
+            <tr>
+              <td>${printOut[i].name}</td>
+              <td>${printOut[i].crew}</td>
+              <td>${printOut[i].starship_class}</td>
+              <td>${printOut[i].manufacturer}</td>
+              <td>${printOut[i].model}</td>
+              <td>${printOut[i].passengers}</td>
+              <td>${printOut[i].length}</td>
+            </tr>}}
+            `);
+      }
+    });
+  }
+
   $(".forSingleView").click(function () {
-    if ($("#singleView").hasClass("singleview-hidden")) {
-      document
-        .getElementById("singleView")
-        .classList.remove("singleview-hidden");
+    if ($("#choosenItem").hasClass("hide")) {
+      document.getElementById("choosenItem").classList.remove("hide");
     }
 
-    // Clear old singleview data
-    $("#singleView").text("");
-
     // Hide listview
-    document.getElementById("resultsTable").classList.add("listview-hidden");
+    document.getElementById("resultsTable").classList.add("hide");
 
     var clicked_button = $(this).val();
     console.log(clicked_button);
-    $("#singleView").append(`
-    <p> ${JSON.stringify(printOut[clicked_button])} </p>`);
+    // $("#chosenItem").append(`
+    // <p> ${JSON.stringify(printOut[clicked_button])} </p>`);
 
-    $("#singleView").append(`
+    $("#choosenItem").append(`
     <button id="goBack" class="btn btn-warning btn-block mx-auto">Back</button>`);
 
     // Go back from singleview, button eventlistener
     $("#goBack").click(function () {
       // Showing listview, hiding singleview
-      document
-        .getElementById("resultsTable")
-        .classList.remove("listview-hidden");
-      document.getElementById("singleView").classList.add("singleview-hidden");
+      document.getElementById("resultsTable").classList.remove("hide");
+      document.getElementById("choosenItem").classList.add("hide");
+
+      // Clear old singleview data
+      $("#choosenItem").text("");
 
       console.log("clicked goback button");
     });

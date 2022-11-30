@@ -22,6 +22,10 @@ main {
   display: none;
 }
 
+.hide {
+  display: none;
+}
+
 .customTable {
   margin: 0 auto;
   align-items: center;
