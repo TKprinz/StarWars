@@ -16,6 +16,18 @@
 // };
 
 const starWars_api_url = `https://swapi.dev/api`; // Bygger ihop url för anrop
+let categories
+
+fetch(starWars_api_url)
+  .then(res => res.json())
+  .then(result => {
+    categories = result
+    for (const category in result) {
+      $("#selectValue").append(
+        `<option value="${category}">${category}:</Option>`
+      );
+    }
+  })
 
 async function starWarsApi() {
   // Skapar funktion för att kunna hämta StarWars
@@ -35,7 +47,7 @@ async function starWarsApi() {
   // };
 
   // Clear options
-  $(".form-select").empty();
+   $(".form-select");
 
   // append Categories from API Root answer
   for (const category in categoryAnswer) {
@@ -53,43 +65,43 @@ $("#searchButton").on("click", async () => {
 
   $(".spinner").removeClass("spinner-hidden"); // Loading starting, showing spinner
 
-  let categoryAnswer = await starWarsApi();
+  //let categoryAnswer = await (fetchCategories);
   let tableData = document.querySelector("#resultsTable");
   tableData.textContent = "";
 
   const finalArray = []; // Contains all data from all pages in the search
-  let currentPage = 1; // Keeping track of current page for data fetching
+  let currentPage = 1; // Keeping tra4ck of current page for data fetching
 
-  let answer = `${$("#selectValue").val()}`;
-  let finalCategory = categoryAnswer[answer];
+  let chosenCategory = `${$("#selectValue").val()}`; 
+  let categoryUrl = categories[chosenCategory];
   let searchValue = $("#search").val();
 
-  let finalCategoryAnswer = await fetch(
-    `${finalCategory}?search=${searchValue}`
+  let searchCategoryResult = await fetch(
+    `${categoryUrl}?search=${searchValue}`
   );
 
-  let finalAnswer = await finalCategoryAnswer.json();
-  console.log(finalAnswer);
-  //console.log(finalCategoryAnswer);
+  let searchCategoryResultJson = await searchCategoryResult.json();
+  console.log(searchCategoryResultJson);
+  //console.log(searchCategoryResult);
 
-  finalAnswer.results.forEach((obj) => {
+  searchCategoryResultJson.results.forEach((obj) => {
     //Adding data from first page to an empty array
     finalArray.push(obj);
   });
   console.log(finalArray[0]);
   // Function for multiple pages
   // If counts > 10 means that we need to iterate multiple pages
-  if (finalAnswer.count > 10) {
+  if (searchCategoryResultJson.count > 10) {
     // If null, next page doesnt exist
-    while (finalAnswer.next !== null) {
+    while (searchCategoryResultJson.next !== null) {
       currentPage++; // Next page
       // console.log(`Current page: ${currentPage}`);
-      let finalCategoryAnswer = await fetch(
-        `${finalCategory}?search=${searchValue}&page=${currentPage}`
+      let searchCategoryResult = await fetch(
+        `${categoryUrl}?search=${searchValue}&page=${currentPage}`
       );
-      finalAnswer = await finalCategoryAnswer.json();
-      console.log(finalAnswer.results);
-      finalAnswer.results.forEach((obj) => {
+      searchCategoryResultJson = await searchCategoryResult.json();
+      console.log(searchCategoryResultJson.results);
+      searchCategoryResultJson.results.forEach((obj) => {
         finalArray.push(obj); // Push data on current page to "finalArray"
       });
     }
@@ -101,9 +113,9 @@ $("#searchButton").on("click", async () => {
   $(".spinner").addClass("spinner-hidden");
 
   //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.
-  console.log(answer);
+  console.log(chosenCategory);
 
-  if (answer == "people") {
+  if (chosenCategory == "people") {
     $("#resultsTable").append(`
         <tr >
           <th>Name</th>
@@ -120,7 +132,7 @@ $("#searchButton").on("click", async () => {
           </tr>}}`);
     }
   }
-  if (answer == "planets") {
+  if (chosenCategory == "planets") {
     $("#resultsTable").append(`
       <tr>
         <th>Name</th>
@@ -138,7 +150,7 @@ $("#searchButton").on("click", async () => {
       `);
     }
   }
-  if (answer == "films") {
+  if (chosenCategory == "films") {
     $("#resultsTable").append(`
     <tr>
       <th>Title</th>
@@ -156,7 +168,7 @@ $("#searchButton").on("click", async () => {
     `);
     }
   }
-  if (answer == "species") {
+  if (chosenCategory == "species") {
     $("#resultsTable").append(`
           <tr>
             <th>Name</th>
@@ -174,7 +186,7 @@ $("#searchButton").on("click", async () => {
           `);
     }
   }
-  if (answer == "vehicles") {
+  if (chosenCategory == "vehicles") {
     $("#resultsTable").append(`
             <tr>
               <th>Name</th>
@@ -192,7 +204,7 @@ $("#searchButton").on("click", async () => {
             `);
     }
   }
-  if (answer == "starships") {
+  if (chosenCategory == "starships") {
     $("#resultsTable").append(`
             <tr>
               <th>Name</th>
@@ -245,4 +257,4 @@ $("#searchButton").on("click", async () => {
   });
 });
 
-starWarsApi();
+//starWarsApi();
