@@ -1,19 +1,3 @@
-// $(document).ready((event) => {
-//   $("#searchButton").on("click", () => {
-//     renderCharacter($("#testInput").val());
-//   });
-// });
-
-//? Detta är en fetchfunktion för att inte behöva repetera fetch:es. Får svar och returnerar.
-// let getData = async (url) => {
-//   let response = await fetch(url);
-//   console.log("Fetch returned " + response.status);
-//   if (response.ok) {
-//     console.log("Fetch gick bra");
-//   }
-//   let data = await response.json();
-//   return data;
-// };
 
 const starWars_api_url = `https://swapi.dev/api`; // Bygger ihop url för anrop
 let categories;
@@ -24,33 +8,20 @@ fetch(starWars_api_url)
     categories = result;
     for (const category in result) {
       $("#selectValue").append(
-        `<option value="${category}">${category}:</Option>`
+        `<option value="${category}">${category}</Option>`
       );
     }
   });
 
-async function starWarsApi() {
-  // Skapar funktion för att kunna hämta StarWars
+async function starWarsApi() { // Function for API request and printing Categories in DOM
 
-  // Gör ett API-samtal (begäran)
-  // och får svaret tillbaka
-  const response = await fetch(starWars_api_url);
+  const response = await fetch(starWars_api_url); // Makes API-request and awaits response
 
-  // Parsing till JSON-format
-  const categoryAnswer = await response.json();
+  const categoryAnswer = await response.json();   // Parsing till JSON-format
 
-  console.log(categoryAnswer);
-  // let categoryAnswer = {
-  //   People: "People",
-  //   Planets: "Planets",
-  //   Starships: "Starships",
-  // };
+  $(".form-select");  // Clear options
 
-  // Clear options
-  $(".form-select");
-
-  // append Categories from API Root answer
-  for (const category in categoryAnswer) {
+  for (const category in categoryAnswer) {   // append Categories from API Root answer
     $("#selectValue").append(
       `<option value="${category}">${category}:</Option>`
     );
@@ -58,15 +29,13 @@ async function starWarsApi() {
   return categoryAnswer;
 }
 
-$("#searchButton").on("click", async () => {
-  // Clear singleview from data and remove hidden class for listview
+$("#searchButton").on("click", async () => {   // Clear singleview from data and remove hidden class for listview
   $("#choosenItem").text("");
   document.getElementById("resultsTable").classList.remove("hide");
 
   $(".spinner").removeClass("spinner-hidden"); // Loading starting, showing spinner
 
-  //let categoryAnswer = await (fetchCategories);
-  let tableData = document.querySelector("#resultsTable");
+  let tableData = document.querySelector("#resultsTable"); //let categoryAnswer = await (fetchCategories);
   tableData.textContent = "";
 
   const finalArray = []; // Contains all data from all pages in the search
@@ -81,62 +50,51 @@ $("#searchButton").on("click", async () => {
   );
 
   let searchCategoryResultJson = await searchCategoryResult.json();
-  console.log(searchCategoryResultJson);
-  //console.log(searchCategoryResult);
 
-  searchCategoryResultJson.results.forEach((obj) => {
-    //Adding data from first page to an empty array
+  searchCategoryResultJson.results.forEach((obj) => {     //Adding data from first page to an empty array
     finalArray.push(obj);
   });
-  console.log(finalArray[0]);
-  // Function for multiple pages
-  // If counts > 10 means that we need to iterate multiple pages
-  if (searchCategoryResultJson.count > 10) {
-    // If null, next page doesnt exist
+
+  if (searchCategoryResultJson.count > 10) {    // If null, next page doesnt exist
     while (searchCategoryResultJson.next !== null) {
-      currentPage++; // Next page
-      // console.log(`Current page: ${currentPage}`);
+      currentPage++; // Next page;
       let searchCategoryResult = await fetch(
         `${categoryUrl}?search=${searchValue}&page=${currentPage}`
       );
       searchCategoryResultJson = await searchCategoryResult.json();
-      console.log(searchCategoryResultJson.results);
       searchCategoryResultJson.results.forEach((obj) => {
         finalArray.push(obj); // Push data on current page to "finalArray"
       });
     }
   }
 
-  console.log(finalArray);
   let printOut = finalArray;
-  // Loading finished, hiding spinner
-  $(".spinner").addClass("spinner-hidden");
 
-  // Checking if we got any hits on the search
-  if (finalArray.length == 0) {
+  $(".spinner").addClass("spinner-hidden");   // Loading finished, hiding spinner
+
+  if (finalArray.length == 0) { // Checking if we got any hits on the search
     $("#resultsTable").append(`
     <tr>
       <td>No match!</td>
     </tr>}}`);
   } else {
-    //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.
-    console.log(chosenCategory);
+    //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.////////////////////////////////////////////
 
-    if (chosenCategory == "people") {
+    if (chosenCategory == "people") { // If statements depending on what Category is choosen
       $("#resultsTable").append(`
         <tr >
           <th>Name</th>
           <th>Birth Year</th>
           <th>Gender</th>
         </tr>`);
-      for (let i = 0; i < printOut.length; i++) {
+      for (let i = 0; i < printOut.length; i++) { //For loops for printing out either 1 or 99 answers.
         $("#resultsTable").append(`
           <tr>
             <td>${printOut[i].name}</td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
-            <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td>
-          </tr>}}`);
+            <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td> 
+          </tr>}}`); // Button recieves the value of I and uses that value to open singleview later.
       }
     }
     if (chosenCategory == "planets") {
@@ -230,9 +188,23 @@ $("#searchButton").on("click", async () => {
       }
     }
 
-    if (chosenCategory == "people") {
-      $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+    if (chosenCategory == "people") { // IF statements for SINGLEVIEW
+      $(".forSingleView").click(async function () {
+        var buttonValue = $(this).val(); // Takes the value of button previously given
+        let world = await fetch(`${printOut[buttonValue].homeworld}`); // Sends API request for people with a homeworld
+        let printWorld = await world.json();
+        $("#choosenItem").prepend(`
+            <tr>
+              <td>${printOut[buttonValue].name}</td>
+              <td>${printOut[buttonValue].birth_year}</td>
+              <td>${printOut[buttonValue].gender}</td>
+              <td>${printOut[buttonValue].eye_color}</td>
+              <td>${printOut[buttonValue].height}</td>
+              <td>${printWorld.name}</td>
+              <td>${printOut[buttonValue].starships.length}</td>
+            </tr>}}
+            `);
+        $("#choosenItem").prepend(`
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Birth</th>
@@ -242,25 +214,23 @@ $("#searchButton").on("click", async () => {
         <th scope="col">Homeworld</th>
         <th scope="col">Starships</th>
       </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-              <tr>
-                <td>${printOut[i].name}</td>
-                <td>${printOut[i].birth_year}</td>
-                <td>${printOut[i].gender}</td>
-                <td>${printOut[i].eye_color}</td>
-                <td>${printOut[i].height}</td>
-                <td>${printOut[i].homeworld}</td>
-                <td>${printOut[i].starships.length}</td>
-              </tr>}}
-              `);
-        }
       });
     }
-
     if (chosenCategory == "planets") {
       $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+        var buttonValue = $(this).val();
+        $("#choosenItem").prepend(`
+          <tr>
+            <td>${printOut[buttonValue].name}</td>
+            <td>${printOut[buttonValue].climate}</td>
+            <td>${printOut[buttonValue].diameter}</td>
+            <td>${printOut[buttonValue].population}</td>
+            <td>${printOut[buttonValue].terrain}</td>
+            <td>${printOut[buttonValue].gravity}</td>
+            <td>${printOut[buttonValue].orbital_period}</td>
+          </tr>}}
+          `); 
+        $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Climate</th>
@@ -270,24 +240,22 @@ $("#searchButton").on("click", async () => {
       <th scope="col">Gravity</th>
       <th scope="col">Period</th>
     </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-            <tr>
-              <td>${printOut[i].name}</td>
-              <td>${printOut[i].climate}</td>
-              <td>${printOut[i].diameter}</td>
-              <td>${printOut[i].population}</td>
-              <td>${printOut[i].terrain}</td>
-              <td>${printOut[i].gravity}</td>
-              <td>${printOut[i].orbital_period}</td>
-            </tr>}}
-            `);
-        }
       });
     }
     if (chosenCategory == "films") {
       $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+        var buttonValue = $(this).val();
+        $("#choosenItem").prepend(`
+          <tr>
+            <td>${printOut[buttonValue].title}</td>
+            <td>${printOut[buttonValue].director}</td>
+            <td>${printOut[buttonValue].release_date}</td>
+            <td>${printOut[buttonValue].episode_id}</td>
+            <td>${printOut[buttonValue].producer}</td>
+            <td>${printOut[buttonValue].characters.length}</td>
+          </tr>}}
+          `);
+        $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Title</th>
       <th scope="col">Director</th>
@@ -295,26 +263,25 @@ $("#searchButton").on("click", async () => {
       <th scope="col">Episode</th>
       <th scope="col">Producers</th>
       <th scope="col">Characters</th>
-      <th scope="col">Period</th>
     </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-            <tr>
-              <td>${printOut[i].title}</td>
-              <td>${printOut[i].director}</td>
-              <td>${printOut[i].release_date}</td>
-              <td>${printOut[i].episode_id}</td>
-              <td>${printOut[i].producer}</td>
-              <td>${printOut[i].characters.length}</td>
-              <td>${printOut[i].obital_period}</td>
-            </tr>}}
-            `);
-        }
       });
     }
     if (chosenCategory == "species") {
       $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+        var buttonValue = $(this).val();
+        $("#choosenItem").prepend(`
+          <tr>
+            <td>${printOut[buttonValue].name}</td>
+            <td>${printOut[buttonValue].classification}</td>
+            <td>${printOut[buttonValue].language}</td>
+            <td>${printOut[buttonValue].average_height}</td>
+            <td>${printOut[buttonValue].average_lifespan}</td>
+            <td>${printOut[buttonValue].designation}</td>
+            <td>${printOut[buttonValue].eye_colors}</td>
+            <td>${printOut[buttonValue].skin_colors}</td>
+          </tr>}}
+          `);
+        $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Classification</th>
@@ -325,25 +292,23 @@ $("#searchButton").on("click", async () => {
       <th scope="col">Eye Colors</th>
       <th scope="col">Skin Colors</th>
     </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-            <tr>
-              <td>${printOut[i].name}</td>
-              <td>${printOut[i].classification}</td>
-              <td>${printOut[i].language}</td>
-              <td>${printOut[i].average_height}</td>
-              <td>${printOut[i].average_lifespan}</td>
-              <td>${printOut[i].designation}</td>
-              <td>${printOut[i].eye_colors}</td>
-              <td>${printOut[i].skin_colors}</td>
-            </tr>}}
-            `);
-        }
       });
     }
     if (chosenCategory == "vehicles") {
       $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+        var buttonValue = $(this).val();
+        $("#choosenItem").prepend(`
+          <tr>
+            <td>${printOut[buttonValue].name}</td>
+            <td>${printOut[buttonValue].model}</td>
+            <td>${printOut[buttonValue].vehicle_class}</td>
+            <td>${printOut[buttonValue].length}</td>
+            <td>${printOut[buttonValue].manufacturer}</td>
+            <td>${printOut[buttonValue].passengers}</td>
+            <td>${printOut[buttonValue].cargo_capacity}</td>
+          </tr>}}
+          `);
+        $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Model</th>
@@ -353,24 +318,23 @@ $("#searchButton").on("click", async () => {
       <th scope="col">Passengers</th>
       <th scope="col">Cargo Capacity</th>
     </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-            <tr>
-              <td>${printOut[i].name}</td>
-              <td>${printOut[i].model}</td>
-              <td>${printOut[i].vehicle_class}</td>
-              <td>${printOut[i].length}</td>
-              <td>${printOut[i].manufacturer}</td>
-              <td>${printOut[i].passengers}</td>
-              <td>${printOut[i].cargo_capacity}</td>
-            </tr>}}
-            `);
-        }
       });
     }
     if (chosenCategory == "starships") {
       $(".forSingleView").click(function () {
-        $("#choosenItem").append(`
+        var buttonValue = $(this).val();
+        $("#choosenItem").prepend(`
+          <tr>
+            <td>${printOut[buttonValue].name}</td>
+            <td>${printOut[buttonValue].crew}</td>
+            <td>${printOut[buttonValue].starship_class}</td>
+            <td>${printOut[buttonValue].manufacturer}</td>
+            <td>${printOut[buttonValue].model}</td>
+            <td>${printOut[buttonValue].passengers}</td>
+            <td>${printOut[buttonValue].length}</td>
+          </tr>}}
+          `);
+        $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Crew</th>
@@ -380,19 +344,6 @@ $("#searchButton").on("click", async () => {
       <th scope="col">Passengers</th>
       <th scope="col">Length</th>
     </tr>`);
-        for (let i = 0; i < printOut.length; i++) {
-          $("#choosenItem").append(`
-            <tr>
-              <td>${printOut[i].name}</td>
-              <td>${printOut[i].crew}</td>
-              <td>${printOut[i].starship_class}</td>
-              <td>${printOut[i].manufacturer}</td>
-              <td>${printOut[i].model}</td>
-              <td>${printOut[i].passengers}</td>
-              <td>${printOut[i].length}</td>
-            </tr>}}
-            `);
-        }
       });
     }
 
@@ -400,31 +351,22 @@ $("#searchButton").on("click", async () => {
       if ($("#choosenItem").hasClass("hide")) {
         document.getElementById("choosenItem").classList.remove("hide");
       }
+      document.getElementById("resultsTable").classList.add("hide");       // Hide listview
 
-      // Hide listview
-      document.getElementById("resultsTable").classList.add("hide");
-
-      var clicked_button = $(this).val();
-      console.log(clicked_button);
-      // $("#chosenItem").append(`
-      // <p> ${JSON.stringify(printOut[clicked_button])} </p>`);
+      //var clicked_button = $(this).val();
 
       $("#choosenItem").append(`
-    <button id="goBack" class="btn btn-warning btn-block mx-auto">Back</button>`);
+    <button id="goBack" class="btn btn-warning btn-block m-3">Back</button>`);
 
-      // Go back from singleview, button eventlistener
-      $("#goBack").click(function () {
+
+      $("#goBack").click(function () { // Go back from singleview, button eventlistener
         // Showing listview, hiding singleview
         document.getElementById("resultsTable").classList.remove("hide");
         document.getElementById("choosenItem").classList.add("hide");
 
         // Clear old singleview data
         $("#choosenItem").text("");
-
-        console.log("clicked goback button");
       });
     });
   }
 });
-
-//starWarsApi();
