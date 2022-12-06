@@ -1,11 +1,12 @@
+const starWars_api_url = `https://swapi.dev/api`; // Base URL for calls
 
-const starWars_api_url = `https://swapi.dev/api`; // Bygger ihop url för anrop
-let categories;
+let categories; // This will hold categories that will be rendered in the dropdown select menu
 
-fetch(starWars_api_url)
-  .then((res) => res.json())
+fetch(starWars_api_url) // API call for fetching categories
+  .then((res) => res.json()) // Parsing from JSON string to javascript object
   .then((result) => {
     categories = result;
+    // Populating options in dropdown select menu
     for (const category in result) {
       $("#selectValue").append(
         `<option value="${category}">${category}</Option>`
@@ -13,15 +14,15 @@ fetch(starWars_api_url)
     }
   });
 
-async function starWarsApi() { // Function for API request and printing Categories in DOM
-
+// Function for API request and printing Categories in DOM
+async function starWarsApi() {
   const response = await fetch(starWars_api_url); // Makes API-request and awaits response
+  const categoryAnswer = await response.json(); // Parsing from JSON string to javascript object
 
-  const categoryAnswer = await response.json();   // Parsing till JSON-format
+  $(".form-select"); // Clear options in select menu
 
-  $(".form-select");  // Clear options
-
-  for (const category in categoryAnswer) {   // append Categories from API Root answer
+  // append Categories from API Root answer
+  for (const category in categoryAnswer) {
     $("#selectValue").append(
       `<option value="${category}">${category}:</Option>`
     );
@@ -29,33 +30,38 @@ async function starWarsApi() { // Function for API request and printing Categori
   return categoryAnswer;
 }
 
-$("#searchButton").on("click", async () => {   // Clear singleview from data and remove hidden class for listview
-  $("#choosenItem").text("");
-  document.getElementById("resultsTable").classList.remove("hide");
+// Eventlistener for searchbutton - Clear singleview from data and remove hidden class for listview
+$("#searchButton").on("click", async () => {
+  $("#choosenItem").text(""); // Hiding singleview
+  document.getElementById("resultsTable").classList.remove("hide"); // Showing listview
 
   $(".spinner").removeClass("spinner-hidden"); // Loading starting, showing spinner
 
-  let tableData = document.querySelector("#resultsTable"); //let categoryAnswer = await (fetchCategories);
-  tableData.textContent = "";
+  let tableData = document.querySelector("#resultsTable");
+  tableData.textContent = ""; // Clear listview from data
 
   const finalArray = []; // Contains all data from all pages in the search
-  let currentPage = 1; // Keeping tra4ck of current page for data fetching
+  let currentPage = 1; // Keeping track of current page for data fetching
 
-  let chosenCategory = `${$("#selectValue").val()}`;
+  let chosenCategory = `${$("#selectValue").val()}`; // Get chsoen category
   let categoryUrl = categories[chosenCategory];
-  let searchValue = $("#search").val();
+  let searchValue = $("#search").val(); // Get searchstring
 
   let searchCategoryResult = await fetch(
+    // Get searchresult
     `${categoryUrl}?search=${searchValue}`
   );
 
-  let searchCategoryResultJson = await searchCategoryResult.json();
+  let searchCategoryResultJson = await searchCategoryResult.json(); // Parsing from JSON string to javascript object
 
-  searchCategoryResultJson.results.forEach((obj) => {     //Adding data from first page to an empty array
+  //Adding data from first page to an empty array
+  searchCategoryResultJson.results.forEach((obj) => {
     finalArray.push(obj);
   });
 
-  if (searchCategoryResultJson.count > 10) {    // If null, next page doesnt exist
+  // If result contains more than 10 answers, we iterate through all pages with data.
+  // While next page isn´t null, push data from current page to "finalArray" that contains all data
+  if (searchCategoryResultJson.count > 10) {
     while (searchCategoryResultJson.next !== null) {
       currentPage++; // Next page;
       let searchCategoryResult = await fetch(
@@ -63,38 +69,41 @@ $("#searchButton").on("click", async () => {   // Clear singleview from data and
       );
       searchCategoryResultJson = await searchCategoryResult.json();
       searchCategoryResultJson.results.forEach((obj) => {
-        finalArray.push(obj); // Push data on current page to "finalArray"
+        finalArray.push(obj);
       });
     }
   }
 
-  let printOut = finalArray;
+  let printOut = finalArray; // Copy and renaming
 
-  $(".spinner").addClass("spinner-hidden");   // Loading finished, hiding spinner
+  $(".spinner").addClass("spinner-hidden"); // Loading finished, hiding spinner
 
-  if (finalArray.length == 0) { // Checking if we got any hits on the search
+  // Checking if we got any hits on the search. If not, a notification is shown
+  if (finalArray.length == 0) {
     $("#resultsTable").append(`
     <tr>
       <td>No match!</td>
     </tr>}}`);
   } else {
-    //////////////////////////////////////////försökt dela upp funktionen här men lyckas inte.////////////////////////////////////////////
-
-    if (chosenCategory == "people") { // If statements depending on what Category is choosen
+    // If statements for listview, depending on what category is choosen
+    // For-loops are used for printing out either 1 or 99 answers.
+    // Buttons recieves the value of "i" and uses that value to open singleview later.
+    if (chosenCategory == "people") {
       $("#resultsTable").append(`
         <tr >
           <th>Name</th>
           <th>Birth Year</th>
           <th>Gender</th>
         </tr>`);
-      for (let i = 0; i < printOut.length; i++) { //For loops for printing out either 1 or 99 answers.
+
+      for (let i = 0; i < printOut.length; i++) {
         $("#resultsTable").append(`
           <tr>
             <td>${printOut[i].name}</td>
             <td>${printOut[i].birth_year}</td>
             <td>${printOut[i].gender}</td>
             <td><button class="forSingleView btn btn-dark" value="${i}">More</button</td> 
-          </tr>}}`); // Button recieves the value of I and uses that value to open singleview later.
+          </tr>}}`);
       }
     }
     if (chosenCategory == "planets") {
@@ -187,11 +196,14 @@ $("#searchButton").on("click", async () => {   // Clear singleview from data and
             `);
       }
     }
-
-    if (chosenCategory == "people") { // IF statements for SINGLEVIEW
+    // If statements for singleview
+    // Takes the value of button previously given in listview.
+    // An eventlistener is waiting for the "More" button to be clicked.
+    // (For people, an API request is sent for homeworld name information)
+    if (chosenCategory == "people") {
       $(".forSingleView").click(async function () {
-        var buttonValue = $(this).val(); // Takes the value of button previously given
-        let world = await fetch(`${printOut[buttonValue].homeworld}`); // Sends API request for people with a homeworld
+        var buttonValue = $(this).val();
+        let world = await fetch(`${printOut[buttonValue].homeworld}`);
         let printWorld = await world.json();
         $("#choosenItem").prepend(`
             <tr>
@@ -229,7 +241,7 @@ $("#searchButton").on("click", async () => {   // Clear singleview from data and
             <td>${printOut[buttonValue].gravity}</td>
             <td>${printOut[buttonValue].orbital_period}</td>
           </tr>}}
-          `); 
+          `);
         $("#choosenItem").prepend(`
     <tr>
       <th scope="col">Name</th>
@@ -347,24 +359,23 @@ $("#searchButton").on("click", async () => {   // Clear singleview from data and
       });
     }
 
+    // Eventlistener for "More" button.
+    // Hides listview, shows singleview
     $(".forSingleView").click(function () {
       if ($("#choosenItem").hasClass("hide")) {
         document.getElementById("choosenItem").classList.remove("hide");
       }
-      document.getElementById("resultsTable").classList.add("hide");       // Hide listview
-
-      //var clicked_button = $(this).val();
+      document.getElementById("resultsTable").classList.add("hide");
 
       $("#choosenItem").append(`
-    <button id="goBack" class="btn btn-warning btn-block m-3">Back</button>`);
+    <button id="goBack" class="btn btn-warning btn-block m-3">Back</button>`); // Adding "Back" button
 
-
-      $("#goBack").click(function () { // Go back from singleview, button eventlistener
-        // Showing listview, hiding singleview
+      // Eventlistener for "Back" button.
+      // Showing listview, hiding singleview and clears old singleview data
+      $("#goBack").click(function () {
         document.getElementById("resultsTable").classList.remove("hide");
         document.getElementById("choosenItem").classList.add("hide");
 
-        // Clear old singleview data
         $("#choosenItem").text("");
       });
     });
