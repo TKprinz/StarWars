@@ -1,34 +1,21 @@
 const starWars_api_url = `https://swapi.dev/api`; // Base URL for calls
-
 let categories; // This will hold categories that will be rendered in the dropdown select menu
 
-fetch(starWars_api_url) // API call for fetching categories
-  .then((res) => res.json()) // Parsing from JSON string to javascript object
-  .then((result) => {
-    categories = result;
-    // Populating options in dropdown select menu
-    for (const category in result) {
-      $("#selectValue").append(
-        `<option value="${category}">${category}</Option>`
-      );
-    }
-  });
-
-// Function for API request and printing Categories in DOM
-async function starWarsApi() {
-  const response = await fetch(starWars_api_url); // Makes API-request and awaits response
-  const categoryAnswer = await response.json(); // Parsing from JSON string to javascript object
-
-  $(".form-select"); // Clear options in select menu
-
-  // append Categories from API Root answer
-  for (const category in categoryAnswer) {
-    $("#selectValue").append(
-      `<option value="${category}">${category}:</Option>`
-    );
-  }
-  return categoryAnswer;
-}
+// Init - fetching categories
+const init = () => {
+  fetch(starWars_api_url) // API call for fetching categories
+    .then((res) => res.json()) // Parsing from JSON string to javascript object
+    .then((result) => {
+      categories = result;
+      // Populating options in dropdown select menu
+      for (const category in result) {
+        $("#selectValue").append(
+          `<option value="${category}">${category}</Option>`
+        );
+      }
+    });
+};
+init();
 
 // Eventlistener for searchbutton - Clear singleview from data and remove hidden class for listview
 $("#searchButton").on("click", async () => {
